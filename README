@@ -1,0 +1,74 @@
+Mustachios
+===========
+
+Introduction goes here.
+
+Install
+=======
+
+add it to Gemfile:
+gem "mustachios", :git => 'mustachios'
+gem 'carrierwave'
+gem 'mini_magick'
+
+generate model:
+script/rails g mustachios:install
+
+generate STI child model:
+script/rails g mustachios MODEL_NAME
+
+Method
+======
+
+has_mustache_theme(name, options)
+options:
+  theme
+  theme_style
+  data
+
+Example
+=======
+
+script/rails g has_mustache blog_theme
+script/rails g has_mustache mobile_blog_theme
+
+script/rails g model blog
+
+class Blog < ActiveRecord::Base
+  belongs_to :blog_theme
+  belongs_to :blog_mobile_theme
+
+  include Mustachios
+
+  has_mustache_theme # theme
+  
+  has_mustache_theme :mobile_theme, :theme => :blog_mobile_theme # mobile_theme
+end
+
+theme = BlogTheme.create( :name => 'Default Theme', 
+                          :description => 'default',
+                          :html => "<h1>{{title}}</h1>",
+                          :css  => "body{ color: RED; }"
+                        )
+
+theme_image = MustacheThemeImage.new
+theme_image.image = open('user_upload_image.jpg')
+theme_image.save
+
+theme.images << theme_image
+theme.save
+
+mobile_theme = MobileBlogTheme.create( :name => 'Mobile Theme', 
+                                 :description => 'default',
+                                 :html => "<h1>Mobile {{title}}</h1>",
+                              )
+
+blog = Blog.create(:title => 'MY BLOG', :blog_theme => theme,  )
+
+blog.theme       # <h1>MY BLOG</h1>
+blog.theme_style # body{ color: RED; }
+
+blog.mobile_theme       # <h1>Mobile MY BLOG</h1>
+blog.theme_style # "" empty string
+
+Copyright (c) 2011 [name of plugin creator], released under the MIT license
