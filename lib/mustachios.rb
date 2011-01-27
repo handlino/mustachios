@@ -9,7 +9,6 @@ module Mustachios
   module ClassMethods
     def has_mustache_theme(name='theme', options={})
 
-
       options = { 
         :theme => "#{self.to_s.underscore}_theme",
         :theme_style => nil,
@@ -18,7 +17,7 @@ module Mustachios
        
       define_method( name.to_sym ) do 
         theme = self.send(options[:theme])
-        data = options[:data] || self 
+        data = options[:data] ? self.send(options[:data]) : self 
         if theme.is_a? String
           Mustache.render( theme, data) 
         else
@@ -28,7 +27,7 @@ module Mustachios
 
       define_method( "#{name}_style".to_sym ) do 
         theme = options[:theme_style] ? self.send(options[:theme_style]) : self.send(options[:theme])
-        data = options[:data] || self 
+        data = options[:data] ? self.send(options[:data]) : self 
         if theme.is_a? String
           Mustache.render( theme, data) 
         else
