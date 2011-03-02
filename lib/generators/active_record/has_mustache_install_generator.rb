@@ -18,7 +18,7 @@ module ActiveRecord
       def inject_mustache_theme
         inject_into_class("app/models/mustache_theme.rb", MustacheTheme ) do 
         <<eos
-  include Mustachios:Renderable
+  include Mustachios::Renderable
   has_many :images, :class_name => "MustacheThemeImage"
 eos
         end
