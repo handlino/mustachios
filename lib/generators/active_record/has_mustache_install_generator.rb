@@ -12,7 +12,7 @@ module ActiveRecord
 
         # we need invoke active_record:model again
         @_invocations.delete(ActiveRecord::Generators::ModelGenerator)
-        @_invocations.delete(TestUnit::Generators::ModelGenerator)
+        @_invocations.delete(TestUnit::Generators::ModelGenerator) if defined?(TestUnit)
       end
 
       def inject_mustache_theme
